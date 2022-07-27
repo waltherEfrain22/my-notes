@@ -66,9 +66,20 @@ class _LoginViewState extends State<LoginView> {
                   email: email,
                   password: password,
                 );
+                final user = FirebaseAuth.instance.currentUser;
+
+                if (user?.emailVerified ?? false) {
+                  //is verify
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+                } else {
+//not verify
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      verifyEmailRoute, (route) => false);
+                }
                 // ignore: use_build_context_synchronously
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil(notesRoute, (route) => false);
+
               } on FirebaseAuthException catch (a) {
                 //verificamos si el error es de firebase autenticacion
                 if (a.code == 'user-not-found') {
@@ -77,21 +88,21 @@ class _LoginViewState extends State<LoginView> {
                     'User not found ;(',
                   );
                 } else if (a.code == 'wrong-password') {
-                await showErrorDialog(
+                  await showErrorDialog(
                     context,
                     'Wrong Credentials',
                   );
-                }else{
+                } else {
                   await showErrorDialog(
                     context,
                     'Error:  ${a.code}',
                   );
                 }
               } catch (e) {
-            await showErrorDialog(
-                    context,
-                    e.toString(),
-                  );
+                await showErrorDialog(
+                  context,
+                  e.toString(),
+                );
               }
             },
             child: const Text('Login'),
