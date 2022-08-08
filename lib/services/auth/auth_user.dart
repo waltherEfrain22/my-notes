@@ -6,7 +6,9 @@ import 'package:flutter/foundation.dart';
 class AuthUser{
   final bool isEmailVerified;
 
-  const  AuthUser(this.isEmailVerified);//this is the constructor
+  const  AuthUser( {required this.isEmailVerified});//this is the constructor
 
-  factory AuthUser.fromFirebase(User user)=> AuthUser(user.emailVerified); 
+  factory AuthUser.fromFirebase(User user)=> AuthUser( isEmailVerified:user.emailVerified); 
+
+
 }
