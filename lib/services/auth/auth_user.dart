@@ -4,16 +4,19 @@ import 'package:flutter/foundation.dart';
 
 @immutable //they can not have fields that change
 class AuthUser{
-
-  final String? email;
+ final String id;
+  final String email;
   final bool isEmailVerified;
 
-  const  AuthUser( {required this.isEmailVerified,
-    required this.email
+  const  AuthUser( {required this.id,
+    required this.email,
+    required this.isEmailVerified
   });//this is the constructor
 
   factory AuthUser.fromFirebase(User user)=>
-   AuthUser(  email:user.email,
+   AuthUser(  
+    id:user.uid,
+    email:user.email!,
      isEmailVerified:user.emailVerified); 
 
 
