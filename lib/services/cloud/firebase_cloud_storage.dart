@@ -1,7 +1,7 @@
-import 'dart:html';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:mynotes/services/cloud/cloud_note.dart';
 import 'package:mynotes/services/cloud/cloud_storage_constants.dart';
 import 'package:mynotes/services/cloud/cloud_storage_exceptions.dart';
@@ -41,23 +41,24 @@ Future<void> updateNote({
    return await notes.where(
       ownerUserIdFieldName,
       isEqualTo: ownerUserID
-    ).get().then((value) => value.docs.map((doc){
-      return CloudNote(
-        documentId: doc.id,
-         ownerUserID: doc.data()[ownerUserIdFieldName] as String,
-          text: doc.data()[textFieldName] as String,
+    ).get().then((value) => value.docs.map(
+      (doc) => CloudNote.fromSnapshot(doc),),
+      
       );
-    }));
    } catch(e){
     throw CouldNotGetAllNotesException();
    }
   }
 
-  void createNewNote({required String ownerUserID}) async{
-   await notes.add({
+  Future<CloudNote> createNewNote({required String ownerUserID}) async{
+   final document = await notes.add({
       ownerUserIdFieldName:ownerUserID,
       textFieldName:'',
-    });
+    });final fetchNote= await document.get();
+    return CloudNote(
+      documentId: fetchNote.id,
+       ownerUserID: ownerUserID,
+        text: '',);
   }
 
 
