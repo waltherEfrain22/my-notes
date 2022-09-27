@@ -9,7 +9,7 @@ import 'package:mynotes/views/notes/notes_view.dart';
 import 'package:mynotes/views/register_view.dart';
 import 'package:mynotes/views/verify_email.dart';
 
-import 'firebase_options.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
