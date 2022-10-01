@@ -4,6 +4,7 @@ import 'package:mynotes/services/auth/auth_exceptions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_event.dart';
+import 'package:mynotes/services/auth/bloc/auth_state.dart';
 
 
 import '../utilities/dialogs/error_dialog.dart';
@@ -58,39 +59,34 @@ class _LoginViewState extends State<LoginView> {
               hintText: "Ingresa Tu Contraseña",
             ),
           ),
-          TextButton(
+          BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) async {
+              if(state is AuthStateLoggedOut){
+                if (state.exception is UserNotFoundAuthException) {
+                  await showErrorDialog(context,'Usuario no Encontrado');
+                } else if (state.exception is WrongPasswordAuthException){
+                  await showErrorDialog(context, 'Credenciales Incorrectas ');
+                } else if (state.exception is GenericAuthException){
+                  await showErrorDialog(context, 'Error de Autenticación');
+                }
+              }
+            }, 
+            child: TextButton(
             onPressed: () async {
               final email = _email.text;
               final password = _password.text;
-              try {
-                context.read<AuthBloc>().add(
+               context.read<AuthBloc>().add(
                   AuthEventLogIn(
                     email, 
                     password
                     ),
                 );
-                // ignore: use_build_context_synchronously
-
-              } on UserNotFoundAuthException {
-                await showErrorDialog(
-                  context,
-                  'User not found ;(',
-                );
-              } on WrongPasswordAuthException{
-                  await showErrorDialog(
-                    context,
-                    'Wrong Credentials',
-                  );
-              } on GenericAuthException{
-                   await showErrorDialog(
-                  context,
-                'Authentication Error ;(',
-                );
-              }
          
             },
             child: const Text('Login'),
           ),
+            
+            ) ,
           TextButton(
             onPressed: () {
               Navigator.of(context)
