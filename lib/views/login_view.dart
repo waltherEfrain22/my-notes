@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/services/auth/auth_exceptions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
@@ -39,23 +38,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) async{
-
-        if(state is AuthStateLoggedOut){
-           final closeDialog = _closeDialogHandle;
-                if(!state.isLoading  && closeDialog != null ){
-                  closeDialog();
-                  _closeDialogHandle = null;
-
-                } else if(state.isLoading && closeDialog == null ){
-                  _closeDialogHandle = showLoadingDialog(
-                    context: context, 
-                    text: 'Cargando...');
-                }
-        }
-                 
-                
-
+      listener: (context, state) async{        
 
                 if(state is AuthStateLoggedOut){
                 if (state.exception is UserNotFoundAuthException) {
