@@ -5,6 +5,7 @@ typedef CloseDialog = void Function();
 CloseDialog showLoadingDialog({
   required BuildContext context,
   required String text,
+ 
 }) {
   final dialog = AlertDialog(
     content: Column(

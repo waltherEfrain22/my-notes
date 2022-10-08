@@ -1,10 +1,11 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:mynotes/services/auth/auth_exceptions.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_bloc.dart';
 import 'package:mynotes/services/auth/bloc/auth_event.dart';
 import 'package:mynotes/services/auth/bloc/auth_state.dart';
-import 'package:mynotes/utilities/dialogs/loading_dialog.dart';
 
 
 import '../utilities/dialogs/error_dialog.dart';
@@ -19,7 +20,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
-  CloseDialog? _closeDialogHandle;
+
 
   @override
   void initState() {
@@ -39,10 +40,9 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) async{        
-
-                if(state is AuthStateLoggedOut){
+            if(state is AuthStateLoggedOut){
                 if (state.exception is UserNotFoundAuthException) {
-                  await showErrorDialog(context,'Usuario no Encontrado');
+                  await showErrorDialog(context,'No se ha encontrado un usuario con las ingresadas credenciales');
                 } else if (state.exception is WrongPasswordAuthException){
                   await showErrorDialog(context, 'Credenciales Incorrectas ');
                 } else if (state.exception is GenericAuthException){
@@ -54,49 +54,62 @@ class _LoginViewState extends State<LoginView> {
       appBar: AppBar(
         title: const Text('Login'),
       ),
-      body: Column(
-        children: [
-          TextField(
-            controller: _email,
-            enableSuggestions: false,
-            autocorrect: false,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              hintText: "Ingresa Tu Correo",
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          children: [
+            const Text('¡Por favor ingrese a su cuenta para interactuar con sus notas creadas!'),
+            TextField(
+              controller: _email,
+              enableSuggestions: false,
+              autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                hintText: "Ingresa Tu Correo",
+              ),
             ),
-          ),
-          TextField(
-            controller: _password,
-            obscureText: true,
-            enableSuggestions: false,
-            autocorrect: false,
-            decoration: const InputDecoration(
-              hintText: "Ingresa Tu Contraseña",
+            TextField(
+              controller: _password,
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
+              decoration: const InputDecoration(
+                hintText: "Ingresa Tu Contraseña",
+              ),
             ),
-          ),
-          TextButton(
-          onPressed: () async {
-            final email = _email.text;
-            final password = _password.text;
-             context.read<AuthBloc>().add(
-                AuthEventLogIn(
-                  email, 
-                  password
-                  ),
-              );
-         
-          },
-          child: const Text('Login'),
-          ) ,
-          TextButton(
-            onPressed: () {
-            context.read<AuthBloc>().add(
-              const AuthEventShouldRegister(),
-              );
+            TextButton(
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
+               context.read<AuthBloc>().add(
+                  AuthEventLogIn(
+                    email, 
+                    password
+                    ),
+                );
+           
             },
-            child: const Text("Not Registered YET? Register Here!"),
-          ),
-        ],
+            child: const Text('Login'),
+            ) ,
+
+            TextButton(
+              onPressed: () {
+              context.read<AuthBloc>().add(
+                const AuthEventForgotPassword(),
+                );
+              },
+              child: const Text("Olvide mi contraseña 😿"),
+            ),
+            TextButton(
+              onPressed: () {
+              context.read<AuthBloc>().add(
+                const AuthEventShouldRegister(),
+                );
+              },
+              child: const Text("¿Aun no se ha registrado? Registrese Aqui! 😸"),
+            ),
+          ],
+        ),
       ),
     ),
       );

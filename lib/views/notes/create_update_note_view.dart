@@ -60,6 +60,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     }
    final currentUser = AuthService.firebase().currentUser!;
 
+   // ignore: unused_local_variable
    final email = currentUser.email;
 
    final userId= currentUser.id;
