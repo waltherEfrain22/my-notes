@@ -31,24 +31,18 @@ Future<void> updateNote({
 
 
 
- Stream<Iterable<CloudNote>> allNotes({required String ownerUserID}) =>
- notes.snapshots().map((event) => event.docs.map((doc) => CloudNote.fromSnapshot(doc)).where((note) =>
- note.ownerUserID == ownerUserID));
+ Stream<Iterable<CloudNote>> allNotes({required String ownerUserID}) {
+  final allNotes = notes
+ .where(ownerUserIdFieldName, isEqualTo: ownerUserID)
+ .snapshots()
+ .map((event) => event.docs.map((doc) => CloudNote.fromSnapshot(doc))) ;
+ 
+ return allNotes;
+ }
+ 
   
 
-  Future<Iterable<CloudNote>> getNotes({required String ownerUserID}) async{
-   try{
-   return await notes.where(
-      ownerUserIdFieldName,
-      isEqualTo: ownerUserID
-    ).get().then((value) => value.docs.map(
-      (doc) => CloudNote.fromSnapshot(doc),),
-      
-      );
-   } catch(e){
-    throw CouldNotGetAllNotesException();
-   }
-  }
+
 
   Future<CloudNote> createNewNote({required String ownerUserID}) async{
    final document = await notes.add({

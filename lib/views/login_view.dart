@@ -95,6 +95,7 @@ class _LoginViewState extends State<LoginView> {
             ) ,
 
             TextButton(
+            
               onPressed: () {
               context.read<AuthBloc>().add(
                 const AuthEventForgotPassword(),
