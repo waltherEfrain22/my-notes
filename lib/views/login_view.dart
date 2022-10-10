@@ -53,6 +53,8 @@ class _LoginViewState extends State<LoginView> {
       child: Scaffold(
       appBar: AppBar(
         title: const Text('Login'),
+        elevation: 20,
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),

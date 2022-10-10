@@ -17,10 +17,13 @@ class NotesListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+                      
                       itemCount: notes.length,
                       itemBuilder: (context, index){
+                        
                         final note = notes.elementAt(index);
                          return ListTile(
+                          
                           onTap: () {
                             onTap(note);
                           },
