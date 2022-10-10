@@ -55,6 +55,7 @@ class HomePage extends StatelessWidget {
         LoadingScreen().hide();
       }
       },
+      //comment
       builder: (context, state) {
         if(state is AuthStateLoggedIn){
           return const NotesView();
